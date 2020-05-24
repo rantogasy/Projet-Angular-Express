@@ -54,3 +54,43 @@ app.post('/list_tasks', (request, response) => {
 })
 
 
+app.post('/list_tasks/:categorie', (request, response) => {
+    const categorie = request.params.categorie
+    const query = 'SELECT * FROM task WHERE categorie="' + categorie + '"'
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        throw err;
+    }
+    response.json(rows)
+}); // Get all tasks from task table
+})
+
+
+app.get('/save_task', (request, response) => {
+    response.sendFile('save_task.html', {
+        root: path.join(__dirname, './templates/')
+    })
+})
+
+
+app.post('/save_task', (request, response) => {
+    data = request.body
+      db.run(`INSERT INTO task(description, categorie, date) VALUES('${data.description}', '${data.categorie}', '${data.date}')`, function(err) {
+    if (err) {
+      return console.log(err.message);
+    }
+    // get the last insert id
+    console.log(`A row has been inserted`);
+  });
+})
+
+
+app.listen(8080, () => console.log('Listening on port 8080'))
+
+
+/*db.close((err) => {
+  if (err) {
+    return console.error(err.message)
+}
+console.log('Close the database connection.')
+}) */
