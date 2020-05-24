@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser')
 const express = require('express')
-const mysql = require('mysql')
+const sqlite3 = require('sqlite3').verbose()
 const path = require('path')
 const cors = require('cors')
 
@@ -8,24 +8,20 @@ const cors = require('cors')
 const app = express()
 
 
-var conn = mysql.createConnection({
-  database: 'simona',
-  host: "dwarves.iut-fbleau.fr",
-  user: "simona",
-  password: "simona"
-})
- 
-conn.connect(function(err) {
-  if (err) throw err
-  console.log('Connected to the MYSQL database.')
+let db = new sqlite3.Database(__dirname + '\\' + 'Database.db', (err) => {
+	console.log(__dirname + '\\' + 'Database.db')
+  if (err) {
+    return console.error(err.message)
+}
+console.log('Connected to the SQlite database.')
 })
 
 
-//app.use(bodyParser.urlencoded({ extended: false }))
-//app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
-//app.use(cors())
+app.use(cors())
 
 
 
