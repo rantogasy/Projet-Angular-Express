@@ -29,14 +29,28 @@ conn.connect(function(err) {
 
 
 
+app.get('/', (request, response) => {
+    response.sendFile('tasks_list.html', {
+        root: path.join(__dirname, './templates/')
+    })
+})
 
 
-app.listen(8080, () => console.log('Listening on port 8080'))
+app.get('/:categorie', (request, response) => {
+    response.sendFile('tasks_list.html', {
+        root: path.join(__dirname, './templates/')
+    })
+})
 
 
-/*db.close((err) => {
-  if (err) {
-    return console.error(err.message)
-}
-console.log('Close the database connection.')
-}) */
+app.post('/list_tasks', (request, response) => {
+    const query = 'SELECT * FROM task'
+    db.all(query, [], (err, rows) => {
+      if (err) {
+        throw err;
+    }
+    response.json(rows)
+}); // Get all tasks from task table
+})
+
+
