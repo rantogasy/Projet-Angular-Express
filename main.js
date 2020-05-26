@@ -30,7 +30,7 @@ app.use(cors())
 
 
 
-app.get('/', (request, response) => {
+/*app.get('/', (request, response) => {
     response.sendFile('tasks_list.html', {
         root: path.join(__dirname, './templates/')
     })
@@ -41,7 +41,7 @@ app.get('/:categorie', (request, response) => {
     response.sendFile('tasks_list.html', {
         root: path.join(__dirname, './templates/')
     })
-  })
+  })*/
 
 //Liste des articles au format JSON
   app.get('/list_article', (request, response) => {
@@ -52,17 +52,19 @@ app.get('/:categorie', (request, response) => {
     })
   })
 
-//Insertion d'un article via le formulaire
-  app.post('/save_article/:form', (request, response) => {
+
+//Retourne un article au format JSON
+  app.get('/list_article/:nomArticle', (request, response) => {
     data = request.body
-    var sql = `INSERT INTO article (idArticle, nomArticle, descriptionArticle) VALUES('', '${data.nomArticle}', '${data.descriptionArticle}')`
-    conn.query(sql, function (err, result) {
-      if (err) throw err
-      console.log("1 record inserted")
-      console.log(result)
+    conn.query("SELECT * FROM article WHERE nomArticle = ?",[data.nomArticle] , function (err, result, fields)  {
+      if (err) throw err;
+      console.log(result);
       response.json(result)
     })
   })
+
+
+
 
 
 
