@@ -9,10 +9,10 @@ const app = express()
 
 //connexion à la bdd
 var conn = mysql.createConnection({
-  database: 'tenga',
-  host: "dwarves.iut-fbleau.fr",
-  user: "tenga",
-  password: "tenga"
+  database: 'angular',
+  host: "localhost",
+  user: "root",
+  password: ""
 })
 
 //controle de la connexion
