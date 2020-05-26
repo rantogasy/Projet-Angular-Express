@@ -9,24 +9,24 @@ const app = express()
 
 //connexion à la bdd
 var conn = mysql.createConnection({
-  database: 'simona',
+  database: 'tenga',
   host: "dwarves.iut-fbleau.fr",
-  user: "simona",
-  password: "simona"
+  user: "tenga",
+  password: "tenga"
 })
 
 //controle de la connexion
 conn.connect(function(err) {
   if (err) throw err
-  console.log('Connected to the MYSQL database.')
+    console.log('Connected to the MYSQL database.')
 })
 
 
-//app.use(bodyParser.urlencoded({ extended: false }))
-//app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 
-//app.use(cors())
+app.use(cors())
 
 
 
@@ -41,18 +41,29 @@ app.get('/:categorie', (request, response) => {
     response.sendFile('tasks_list.html', {
         root: path.join(__dirname, './templates/')
     })
-})
+  })
 
+//Liste des articles au format JSON
+  app.get('/list_article', (request, response) => {
+    conn.query("SELECT * FROM article", function (err, result, fields)  {
+      if (err) throw err;
+      console.log(result);
+      response.json(result)
+    })
+  })
 
-app.post('/list_tasks', (request, response) => {
-    const query = 'SELECT * FROM task'
-    db.all(query, [], (err, rows) => {
-      if (err) {
-        throw err;
-    }
-    response.json(rows)
-}); // Get all tasks from task table
-})
+//Insertion d'un article via le formulaire
+  app.post('/save_article/:form', (request, response) => {
+    data = request.body
+    var sql = `INSERT INTO article (idArticle, nomArticle, descriptionArticle) VALUES('', '${data.nomArticle}', '${data.descriptionArticle}')`
+    conn.query(sql, function (err, result) {
+      if (err) throw err
+      console.log("1 record inserted")
+      console.log(result)
+      response.json(result)
+    })
+  })
+
 
 
 
