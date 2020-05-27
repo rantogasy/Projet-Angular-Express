@@ -57,14 +57,16 @@ app.get('/:categorie', (request, response) => {
 
 
 //Retourne un article au format JSON
-  app.post('/list_article/:nomArticle', (request, response) => {
-    nomArticle = request.params.categorie
+  app.get('/list_article/:nomArticle', (request, response) => {
+    nomArticle = request.params.nomArticle
     conn.query("SELECT * FROM article WHERE nomArticle = ?",[nomArticle] , function (err, result, fields)  {
       if (err) throw err;
       console.log(result);
       response.json(result)
     })
   })
+
+
 
 
 
