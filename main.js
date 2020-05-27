@@ -41,7 +41,8 @@ app.get('/:categorie', (request, response) => {
     response.sendFile('tasks_list.html', {
         root: path.join(__dirname, './templates/')
     })
-  })*/
+  }) */
+
 
 //Liste des articles au format JSON
   app.get('/list_article', (request, response) => {
@@ -53,17 +54,17 @@ app.get('/:categorie', (request, response) => {
   })
 
 
+
+
 //Retourne un article au format JSON
-  app.get('/list_article/:nomArticle', (request, response) => {
-    data = request.body
-    conn.query("SELECT * FROM article WHERE nomArticle = ?",[data.nomArticle] , function (err, result, fields)  {
+  app.post('/list_article/:nomArticle', (request, response) => {
+    nomArticle = request.params.categorie
+    conn.query("SELECT * FROM article WHERE nomArticle = ?",[nomArticle] , function (err, result, fields)  {
       if (err) throw err;
       console.log(result);
       response.json(result)
     })
   })
-
-
 
 
 
