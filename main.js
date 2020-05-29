@@ -7,8 +7,8 @@ const db = require('./src/JS/bdd.js')
 const http = require('http')
 const path = require('path')
 const cors = require('cors')
-const passport = require('passport')
 const user = require('./src/JS/user.js')
+const article = require('./src/JS/article.js')
 const jwt = require('jsonwebtoken')
 
 
@@ -29,12 +29,10 @@ app.use(function(request, response, next) {
 })
 
 
-
-
 app.get('/', (request, response) => {
-    response.sendFile('tasks_list.html', {
+    /*response.sendFile('tasks_list.html', {
         root: path.join(__dirname, './templates/')
-    })
+    })*/
 })
 
 
@@ -46,24 +44,11 @@ app.get('/', (request, response) => {
 
 
 //Liste des articles au format JSON
-app.get('/list_article', (request, response) => {
-  db.query("SELECT * FROM article", function (err, result, fields)  {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result))
-  })
-})
+app.get('/list_article', article.list_article)
 
 
 //Retourne un article au format JSON
-app.get('/list_article/:nomArticle', (request, response) => {
-  nomArticle = request.params.nomArticle
-  db.query("SELECT * FROM article WHERE nomArticle = ?", [nomArticle], function (err, result, fields)  {
-    if (err) throw err;
-    console.log(result);
-    response.end(JSON.stringify(result))
-  })
-})
+app.get('/list_article/:nomArticle', article.list_article_by_name)
 
 //ajout de l'inscription
 app.post('/signup', user.signup)
@@ -72,44 +57,36 @@ app.post('/signup', user.signup)
 app.post('/signin', user.signin)
 
 //Insertion d'un article via le formulaire
-app.post('/save_article', (request, response) => {
-  data = request.body
-  db.query('INSERT INTO article SET ?', data, function (err, result) {
-    if (err) throw err
-      console.log(`A row has been inserted!`)
-      console.log(result)
-      response.end(JSON.stringify(result))
-  })
-})
+app.post('/save_article', article.save_article)
 
 //Modification d'un article
-app.put('/modify_article', (request, response) => {
-  idArticle = request.body.idArticle 
-  nomArticle = request.body.nomArticle
-  descriptionArticle = request.body.descriptionArticle
-  dateArticle = request.body.dateArticle
-  db.query('UPDATE `article` SET `nomArticle`= ?,`descriptionArticle`= ?,`dateArticle`= ? WHERE `idArticle`=?', [nomArticle, descriptionArticle, dateArticle, idArticle], function (error, result, fields) {
-  if (error) throw error
-    console.log(`A row has been modified!`)
-    console.log(result)
-    response.end(JSON.stringify(result))
-  })
-})
+app.put('/modify_article', article.modify_article)
+
 
 //Suppression d'un article
-app.delete('/delete_article', (request, response) => {
-  nomArticle = request.body.nomArticle
-  db.query('DELETE FROM `article` WHERE `nomArticle`= ? ', [nomArticle], function (error, result, fields) {
-  if (error) throw error
-    console.log(`A row has been deleted!`)
+app.delete('/delete_article', article.delete_article)
+
+ /*function getArticle() {
+
+ function setValue(value) {
+    variable = value
+    console.log(variable)
+  }
+
+  db.query("SELECT nomArticle FROM article WHERE nomArticle = ?", [nomArticle], function (err, result, fields)  {
+    if (err) throw err; 
     console.log(result)
-    response.end(JSON.stringify(result))
+    nomArticle = setValue(result) 
   })
-})
+
+  console.log(nomArticle)
+  return nomArticle
+
+}*/
 
 
 
-
+//configuration du serveur
 var server = http.createServer(app).listen(8080, "localhost", function () {
 
   var host = server.address().address
