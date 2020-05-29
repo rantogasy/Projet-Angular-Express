@@ -1,9 +1,14 @@
+//ajout des differents modules necessaires au projet
+require('dotenv').config()
 const bodyParser = require('body-parser')
 const express = require('express')
 const mysql = require('mysql')
 const http = require('http')
 const path = require('path')
 const cors = require('cors')
+const passport = require('passport')
+const user = require('./routes/user')
+const jwt = require('jsonwebtoken')
 
 
 const app = express()
@@ -22,23 +27,24 @@ db.connect(function(err) {
     console.log('Connected to the MYSQL database.')
 })
 
-
+//configuration du BodyParser
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-
+//configuration du cors
 app.use(cors())
 
 
 
-/*app.get('/', (request, response) => {
+
+app.get('/', (request, response) => {
     response.sendFile('tasks_list.html', {
         root: path.join(__dirname, './templates/')
     })
 })
 
 
-app.get('/:categorie', (request, response) => {
+/*app.get('/:categorie', (request, response) => {
     response.sendFile('tasks_list.html', {
         root: path.join(__dirname, './templates/')
     })
@@ -77,12 +83,28 @@ app.post('/save_article', (request, response) => {
   })
 })
 
-
+//Modification d'un article
 app.put('/modify_article', (request, response) => {
-  db.query('UPDATE `article` SET `nomArticle`= ?,`descriptionArticle`= ?,`dateArticle`= ? where `idArticle`=?', [request.body.nomArticle, request.body.descriptionArticle, request.body.dateArticle, request.body.idArticle], function (error, result, fields) {
-  if (error) throw error;
-    console.log(result);
-    response.end(JSON.stringify(result));
+  idArticle = request.body.idArticle 
+  nomArticle = request.body.nomArticle
+  descriptionArticle = request.body.descriptionArticle
+  dateArticle = request.body.dateArticle
+  db.query('UPDATE `article` SET `nomArticle`= ?,`descriptionArticle`= ?,`dateArticle`= ? WHERE `idArticle`=?', [nomArticle, descriptionArticle, dateArticle, idArticle], function (error, result, fields) {
+  if (error) throw error
+    console.log(`A row has been modified!`)
+    console.log(result)
+    response.end(JSON.stringify(result))
+  })
+})
+
+//Suppression d'un article
+app.delete('/delete_article', (request, response) => {
+  nomArticle = request.body.nomArticle
+  db.query('DELETE FROM `article` WHERE `nomArticle`= ? ', [nomArticle], function (error, result, fields) {
+  if (error) throw error
+    console.log(`A row has been deleted!`)
+    console.log(result)
+    response.end(JSON.stringify(result))
   })
 })
 
