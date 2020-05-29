@@ -3,36 +3,30 @@ require('dotenv').config()
 const bodyParser = require('body-parser')
 const express = require('express')
 const mysql = require('mysql')
+const db = require('./src/JS/bdd.js')
 const http = require('http')
 const path = require('path')
 const cors = require('cors')
 const passport = require('passport')
-const user = require('./routes/user')
+const user = require('./src/JS/user.js')
 const jwt = require('jsonwebtoken')
+
 
 
 const app = express()
 
-//connexion à la bdd
-var db = mysql.createConnection({
-  database: 'angular',
-  host: "localhost",
-  user: "root",
-  password: ""
-})
-
-//controle de la connexion
-db.connect(function(err) {
-  if (err) throw err
-    console.log('Connected to the MYSQL database.')
-})
-
 //configuration du BodyParser
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 //configuration du cors
 app.use(cors())
+
+app.use(function(request, response, next) {
+    response.header("Access-Control-Allow-Origin", "*")
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+    next()
+})
 
 
 
@@ -71,6 +65,11 @@ app.get('/list_article/:nomArticle', (request, response) => {
   })
 })
 
+//ajout de l'inscription
+app.post('/signup', user.signup)
+
+//ajout de la connexion
+app.post('/signin', user.signin)
 
 //Insertion d'un article via le formulaire
 app.post('/save_article', (request, response) => {
@@ -111,7 +110,7 @@ app.delete('/delete_article', (request, response) => {
 
 
 
-var server = app.listen(8080, "localhost", function () {
+var server = http.createServer(app).listen(8080, "localhost", function () {
 
   var host = server.address().address
   var port = server.address().port
