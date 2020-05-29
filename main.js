@@ -46,37 +46,45 @@ app.get('/:categorie', (request, response) => {
 
 
 //Liste des articles au format JSON
-  app.get('/list_article', (request, response) => {
-    db.query("SELECT nomArticle, descriptionArticle, dateArticle FROM article", function (err, result, fields)  {
-      if (err) throw err;
-      console.log(result);
-      response.end(JSON.stringify(result))
-    })
+app.get('/list_article', (request, response) => {
+  db.query("SELECT * FROM article", function (err, result, fields)  {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result))
   })
+})
 
 
 //Retourne un article au format JSON
-  app.get('/list_article/:nomArticle', (request, response) => {
-    nomArticle = request.params.nomArticle
-    db.query("SELECT nomArticle, descriptionArticle, dateArticle FROM article WHERE nomArticle = ?", [nomArticle], function (err, result, fields)  {
-      if (err) throw err;
-      console.log(result);
-      response.end(JSON.stringify(result))
-    })
+app.get('/list_article/:nomArticle', (request, response) => {
+  nomArticle = request.params.nomArticle
+  db.query("SELECT * FROM article WHERE nomArticle = ?", [nomArticle], function (err, result, fields)  {
+    if (err) throw err;
+    console.log(result);
+    response.end(JSON.stringify(result))
   })
+})
 
 
 //Insertion d'un article via le formulaire
-  app.post('/save_article', (request, response) => {
-    data = request.body
-    db.query('INSERT INTO article SET ?', data, function (err, result) {
-      if (err) throw err
+app.post('/save_article', (request, response) => {
+  data = request.body
+  db.query('INSERT INTO article SET ?', data, function (err, result) {
+    if (err) throw err
       console.log(`A row has been inserted!`)
       console.log(result)
       response.end(JSON.stringify(result))
-    })
   })
+})
 
+
+app.put('/modify_article', (request, response) => {
+  db.query('UPDATE `article` SET `nomArticle`= ?,`descriptionArticle`= ?,`dateArticle`= ? where `idArticle`=?', [request.body.nomArticle, request.body.descriptionArticle, request.body.dateArticle, request.body.idArticle], function (error, result, fields) {
+  if (error) throw error;
+    console.log(result);
+    response.end(JSON.stringify(result));
+  })
+})
 
 
 
