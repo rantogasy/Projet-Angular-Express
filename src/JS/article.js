@@ -6,6 +6,7 @@ const http = require('http')
 const mysql = require('mysql')
 
 
+//retourne la liste des articles
 exports.list_article = function(request, response) {
 	db.query("SELECT * FROM article", function (err, result, fields)  {
     if (err) throw err;
@@ -14,9 +15,9 @@ exports.list_article = function(request, response) {
   })
 }
 
-
+//retourne un article en particulier
 exports.list_article_by_name = function(request, response) {
-	 nomArticle = request.params.nomArticle
+	 nomArticle = request.body.nomArticle
   	 db.query("SELECT * FROM article WHERE nomArticle = ?", [nomArticle], function (err, result, fields)  {
      if (err) throw err
      console.log(result)
@@ -24,7 +25,7 @@ exports.list_article_by_name = function(request, response) {
   })
 }
 
-
+//ajouter un article
 exports.save_article = function(request, response) {
 	 data = request.body
      db.query('INSERT INTO article SET ?', data, function (err, result) {
@@ -35,7 +36,7 @@ exports.save_article = function(request, response) {
   })
 }
 
-
+//modification d'un article
 exports.modify_article = function(request, response) {
 	 idArticle = request.body.idArticle 
   	 nomArticle = request.body.nomArticle
@@ -51,7 +52,7 @@ exports.modify_article = function(request, response) {
   })
 }
 
-
+//suppression d'un article
 exports.delete_article = function(request, response) {
 	nomArticle = request.body.nomArticle
   	db.query('DELETE FROM `article` WHERE `nomArticle`= ? ', [nomArticle], function (error, result, fields) {
