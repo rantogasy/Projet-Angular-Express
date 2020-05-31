@@ -1,16 +1,16 @@
 "# Projet-Angular-Express" 
 Avant de lancer le serveur, il faut installer les modules suivants avec 'npm install':
 
-body-parser
-express
-dotenv
-mysql
-http
-path
-cors
-jsonwebtoken
-atob
-cryptr
+- body-parser
+- express
+- dotenv
+- mysql
+- http
+- path
+- cors
+- jsonwebtoken
+- atob
+- cryptr
 
 Importez la BDD via angular.sql
 
