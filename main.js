@@ -30,9 +30,13 @@ app.use(function(request, response, next) {
 
 
 app.get('/', (request, response) => {
-    /*response.sendFile('tasks_list.html', {
-        root: path.join(__dirname, './templates/')
-    })*/
+    response.sendFile('app.component.html', {
+        root: path.join(__dirname, '../app/')
+    })
+})
+
+app.post('/', (request, response) => {
+
 })
 
 
@@ -48,7 +52,7 @@ app.get('/list_article', article.list_article)
 
 
 //Retourne un article au format JSON
-app.get('/list_article/:nomArticle', article.list_article_by_name)
+app.post('/list_article/:nomArticle', article.list_article_by_name) 
 
 //ajout de l'inscription
 app.post('/signup', user.signup)
